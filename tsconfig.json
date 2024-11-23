@@ -1,7 +1,22 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "jsx": "react",
+    "types": ["vitest/globals", "@testing-library/jest-dom"],
+    "target": "ES2022", // Specify the ECMAScript target version
+    "module": "ESNext", // Use modern module system compatible with bundlers
+    "moduleResolution": "bundler", // Enable bundler-style module resolution
+    "lib": ["ES2022", "DOM", "DOM.Iterable"], // Include libraries for ES2022 and browser DOM APIs
+    "allowImportingTsExtensions": true, // Allow importing files with .ts extensions
+    "noEmit": true, // Avoid emitting JavaScript files
+    "strict": true, // Enable strict type-checking options
+    "esModuleInterop": true, // Enable compatibility with CommonJS modules
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true, // Enforce consistent casing in file names
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src", "setupTest.ts"], // Include all TypeScript files in the src directory
+  "exclude": ["node_modules", "dist"] // Exclude output and dependency directories
 }
