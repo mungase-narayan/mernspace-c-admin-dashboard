@@ -1,7 +1,3 @@
-import { Credentials } from "../../types";
-import Logo from "../../components/icons/Logo";
-import { LockFilled, LockOutlined, UserOutlined } from "@ant-design/icons";
-import { useMutation } from "@tanstack/react-query";
 import {
   Alert,
   Button,
@@ -14,19 +10,40 @@ import {
   Space,
 } from "antd";
 import React from "react";
-import { login } from "../../http/api";
+import { login, self } from "../../http/api";
+
+import { Credentials } from "../../types";
+import Logo from "../../components/icons/Logo";
+import { LockFilled, LockOutlined, UserOutlined } from "@ant-design/icons";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useAuthStore } from "../../store";
 
 const loginUser = async (credentials: Credentials) => {
   const { data } = await login(credentials);
   return data;
 };
 
+const getSelf = async () => {
+  const { data } = await self();
+  return data;
+};
+
 const LoginPage = () => {
+  const { setUser } = useAuthStore();
+
+  const { refetch } = useQuery({
+    queryKey: ["self"],
+    queryFn: getSelf,
+    enabled: false,
+  });
+
   const { mutate, isPending, isError, error } = useMutation({
     mutationKey: ["login"],
     mutationFn: loginUser,
     onSuccess: async () => {
-      console.log("login success");
+      const selfDataPromise = await refetch();
+      setUser(selfDataPromise.data);
+      console.log("selfDataPromiseData: ", selfDataPromise);
     },
   });
 
