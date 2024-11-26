@@ -9,11 +9,13 @@ import React from "react";
 import LoginPage from "../pages/auth/LoginPage";
 import NonAuth from "../layouts/NonAuth";
 import Dashboard from "../layouts/Dashboard";
-import Root from "../layouts/Root";
+import MainHomePage from "../pages/MainHomePage";
 
 const Routers = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Root />}>
+    <Route path="/">
+      <Route path="" index element={<MainHomePage />} />
+
       <Route path="dashboard" element={<Dashboard />}>
         <Route path="home" element={<DashboardHomePage />} />
       </Route>
