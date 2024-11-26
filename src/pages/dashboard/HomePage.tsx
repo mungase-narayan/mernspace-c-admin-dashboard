@@ -1,11 +1,11 @@
 import React from "react";
 
-const DashboardPage = () => {
+const HomePage = () => {
   return (
     <div className="flex items-center justify-center font-mono pt-4 text-red-500">
-      DashboardPage
+      Dashboard HomePage
     </div>
   );
 };
 
-export default DashboardPage;
+export default HomePage;
