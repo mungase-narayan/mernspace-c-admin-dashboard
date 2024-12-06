@@ -9,10 +9,7 @@ const NonAuth = () => {
   }
   return (
     <div>
-      <h1 className="flex items-center justify-center font-mono text-red-500">
-        Non Auth Layout
-        <Outlet />
-      </h1>
+      <Outlet />
     </div>
   );
 };
