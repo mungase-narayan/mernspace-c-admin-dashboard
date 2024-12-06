@@ -158,9 +158,7 @@ const LoginPage = () => {
                 </Button>
               </Form.Item>
               <div className="flex items-center justify-center">
-                <p>
-                  Don't have an account? <a href="">Create an account</a>
-                </p>
+                <a href="/auth/users">Don't have an account? </a>
               </div>
             </Form>
           </Card>
