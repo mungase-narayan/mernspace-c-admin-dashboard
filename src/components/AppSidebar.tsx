@@ -1,179 +1,116 @@
-import * as React from "react";
+import React from "react";
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
+  SidebarFooter,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
 } from "../components/ui/sidebar";
-import { VersionSwitcher } from "./VersionSwitcher";
-import { SearchForm } from "./SearchForm";
-// This is sample data.
-const data = {
-  versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
-  navMain: [
-    {
-      title: "Getting Started",
-      url: "#",
-      items: [
-        {
-          title: "Installation",
-          url: "#",
-        },
-        {
-          title: "Project Structure",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Building Your Application",
-      url: "#",
-      items: [
-        {
-          title: "Routing",
-          url: "#",
-        },
-        {
-          title: "Data Fetching",
-          url: "#",
-          isActive: true,
-        },
-        {
-          title: "Rendering",
-          url: "#",
-        },
-        {
-          title: "Caching",
-          url: "#",
-        },
-        {
-          title: "Styling",
-          url: "#",
-        },
-        {
-          title: "Optimizing",
-          url: "#",
-        },
-        {
-          title: "Configuring",
-          url: "#",
-        },
-        {
-          title: "Testing",
-          url: "#",
-        },
-        {
-          title: "Authentication",
-          url: "#",
-        },
-        {
-          title: "Deploying",
-          url: "#",
-        },
-        {
-          title: "Upgrading",
-          url: "#",
-        },
-        {
-          title: "Examples",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "API Reference",
-      url: "#",
-      items: [
-        {
-          title: "Components",
-          url: "#",
-        },
-        {
-          title: "File Conventions",
-          url: "#",
-        },
-        {
-          title: "Functions",
-          url: "#",
-        },
-        {
-          title: "next.config.js Options",
-          url: "#",
-        },
-        {
-          title: "CLI",
-          url: "#",
-        },
-        {
-          title: "Edge Runtime",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Architecture",
-      url: "#",
-      items: [
-        {
-          title: "Accessibility",
-          url: "#",
-        },
-        {
-          title: "Fast Refresh",
-          url: "#",
-        },
-        {
-          title: "Next.js Compiler",
-          url: "#",
-        },
-        {
-          title: "Supported Browsers",
-          url: "#",
-        },
-        {
-          title: "Turbopack",
-          url: "#",
-        },
-      ],
-    },
-  ],
+import { FudoCard } from "./FudoCard";
+import {
+  House,
+  Gift,
+  SquareMenu,
+  PackageOpen,
+  ChartNoAxesCombined,
+  Users,
+  Utensils,
+} from "lucide-react";
+import { NavLink } from "react-router-dom";
+import { NavUser } from "./NavUser";
+import { useAuthStore } from "../store";
+
+const getMenuItems = (role: string) => {
+  const baseItems = {
+    navMain: [
+      {
+        items: [
+          {
+            title: "Home",
+            icon: House,
+            url: "home",
+          },
+          {
+            title: "Menu",
+            icon: SquareMenu,
+            url: "menu",
+          },
+          {
+            title: "Orders",
+            icon: PackageOpen,
+            url: "orders",
+          },
+          {
+            title: "Sales",
+            icon: ChartNoAxesCombined,
+            url: "sales",
+          },
+          {
+            title: "Promos",
+            icon: Gift,
+            url: "promos",
+          },
+        ],
+      },
+    ],
+  };
+
+  if (role === "admin") {
+    baseItems.navMain[0].items.push(
+      {
+        title: "Users",
+        icon: Users,
+        url: "users",
+      },
+      {
+        title: "Restaurants",
+        icon: Utensils,
+        url: "restaurants",
+      }
+    );
+  }
+  return baseItems;
 };
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useAuthStore();
+  const data = getMenuItems(user?.role as string);
+
   return (
     <Sidebar {...props}>
-      <SidebarHeader>
-        <VersionSwitcher
-          versions={data.versions}
-          defaultVersion={data.versions[0]}
-        />
-        <SearchForm />
+      <SidebarHeader className="pt-4">
+        <FudoCard />
       </SidebarHeader>
-      <SidebarContent>
-        {/* We create a SidebarGroup for each parent. */}
-        {data.navMain.map((item) => (
-          <SidebarGroup key={item.title}>
-            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {item.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={item.isActive}>
-                      <a href={item.url}>{item.title}</a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+      <SidebarContent className="px-2 pt-4">
+        {data.navMain.map((group, groupIndex) => (
+          <SidebarGroupContent key={`group-${groupIndex}`}>
+            <SidebarMenu>
+              {group.items.map((item, itemIndex) => (
+                <SidebarMenuItem key={`item-${item.url}-${itemIndex}`}>
+                  <NavLink
+                    to={item.url}
+                    className={({ isActive }) => {
+                      return `flex items-center gap-3 rounded-lg px-3 py-2 text-[#838181] transition-all hover:text-primary ${
+                        isActive && "bg-[#F65F421F] text-primary"
+                      }`;
+                    }}
+                  >
+                    {<item.icon />}
+                    {item.title}
+                  </NavLink>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
         ))}
       </SidebarContent>
       <SidebarRail />
+      <SidebarFooter>
+        <NavUser />
+      </SidebarFooter>
     </Sidebar>
   );
 }
